@@ -1,0 +1,14 @@
+[Unit]
+Description = LinkSan — Wayland clipboard link sanitizer
+After = graphical.target
+Wants = graphical.target
+
+[Service]
+Restart=always
+Type=exec
+WorkingDirectory=%Y
+ExecStart=cargo run --release
+Environment=RUST_LOG=info
+
+[Install]
+WantedBy=default.target
