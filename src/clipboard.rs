@@ -1,27 +1,25 @@
+use notify_rust::{Notification, Urgency};
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{Read, Write};
-use std::os::fd::{AsFd, BorrowedFd};
-use std::os::linux::raw::stat;
+use std::os::fd::AsFd;
 use std::os::unix::net::UnixStream;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::thread::JoinHandle;
 use std::time::Duration;
-use notify_rust::{Notification, Urgency};
 use tracing::{debug, error, info, trace, warn};
-use wayland_client::{Connection, Dispatch, Proxy, QueueHandle};
+use url::Url;
 use wayland_client::backend::ObjectId;
-use wayland_client::globals::{registry_queue_init, GlobalListContents};
-use wayland_client::protocol::{wl_registry, wl_seat};
+use wayland_client::globals::{GlobalListContents, registry_queue_init};
 use wayland_client::protocol::wl_registry::WlRegistry;
 use wayland_client::protocol::wl_seat::WlSeat;
+use wayland_client::{Connection, Dispatch, Proxy, QueueHandle};
 use wayland_protocols::ext::data_control::v1::client::ext_data_control_device_v1::{self, ExtDataControlDeviceV1};
 use wayland_protocols::ext::data_control::v1::client::ext_data_control_manager_v1::ExtDataControlManagerV1;
 use wayland_protocols::ext::data_control::v1::client::ext_data_control_offer_v1::{self, ExtDataControlOfferV1};
-use url::Url;
 use wayland_protocols::ext::data_control::v1::client::ext_data_control_source_v1;
-use wayland_protocols::ext::data_control::v1::client::ext_data_control_source_v1::{Event, ExtDataControlSourceV1};
+use wayland_protocols::ext::data_control::v1::client::ext_data_control_source_v1::ExtDataControlSourceV1;
 
 static UTF8_MIME_TYPES: &[&str] = &[
     "text/plain;charset=utf-8",
